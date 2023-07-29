@@ -17,16 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import DriveCreateView, DriveLoginView, UserCreateView, UserLoginView
+from api.views import DriveCreateView, DriveLoginView, DriverListView, DriverUpdateView, UserCreateView, UserDetailView, UserListView, UserLoginView, UserUpdateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/create/', UserCreateView.as_view(), name='user-login'),
-    path('api/login/', UserLoginView.as_view(), name='user-login'),
+    path('api/user/create/', UserCreateView.as_view(), name='user-login'),
+    path('api/user/login/', UserLoginView.as_view(), name='user-login'),
     path('api/driver/create/', DriveCreateView.as_view(), name='driver-create'),
     path('api/driver/login/', DriveLoginView.as_view(), name='driver-login'),
 
     # auth token done now otop etc left
+    path('api/users/list', UserListView.as_view(), name='user-list'),
+    path('api/drivers/list', DriverListView.as_view(), name='driver-list'),
+    path('api/users/<int:pk>/', UserUpdateView.as_view(), name='user-update'),
+    path('api/drivers/<int:pk>/', DriverUpdateView.as_view(), name='driver-update'),
+    path('api/users/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
     
     
     

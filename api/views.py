@@ -1,10 +1,14 @@
-# api_app/views.py
-
-from rest_framework import generics, status
+from rest_framework import generics, status,serializers
 from rest_framework.response import Response
 from .models import CustomUser, DriverUser
-from .serializers import DriverCreateSerializer, DriverLoginSerializer, UserCreateSerializer, UserLoginSerializer
+from .serializers import (
+    CustomUserSerializer, CustomUserUpdateSerializer,
+    DriverCreateSerializer, DriverLoginSerializer,
+    DriverUserSerializer, DriverUserUpdateSerializer,
+    UserCreateSerializer, UserLoginSerializer
+)
 import random
+from rest_framework.generics import RetrieveAPIView
 
 class UserCreateView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -23,7 +27,7 @@ class UserCreateView(generics.CreateAPIView):
         # Here, you would send the OTP to the user's email or mobile
         # For simplicity, we'll just include the OTP in the response
         return Response({'email': user.email, 'otp': otp}, status=status.HTTP_201_CREATED)
-    
+
 class UserLoginView(generics.CreateAPIView):
     serializer_class = UserLoginSerializer
 
@@ -47,8 +51,6 @@ class UserLoginView(generics.CreateAPIView):
             return Response({"message": "Successful hogya bhai"}, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "Invalid email or OTP"}, status=status.HTTP_400_BAD_REQUEST)
-        
-
 
 class DriveCreateView(generics.CreateAPIView):
     queryset = DriverUser.objects.all()
@@ -62,12 +64,12 @@ class DriveCreateView(generics.CreateAPIView):
         otp = ''.join([str(random.randint(0, 9)) for _ in range(6)])
 
         # Save the user without password
-        user = serializer.save()
+        driver = serializer.save()
 
         # Here, you would send the OTP to the user's email or mobile
         # For simplicity, we'll just include the OTP in the response
-        return Response({'email': user.email, 'otp': otp}, status=status.HTTP_201_CREATED)
-    
+        return Response({'email': driver.email, 'otp': otp}, status=status.HTTP_201_CREATED)
+
 class DriveLoginView(generics.CreateAPIView):
     serializer_class = DriverLoginSerializer
 
@@ -80,7 +82,7 @@ class DriveLoginView(generics.CreateAPIView):
 
         # Check if the user exists with the provided email
         try:
-            user = DriverUser.objects.get(email=email)
+            driver = DriverUser.objects.get(email=email)
         except DriverUser.DoesNotExist:
             return Response({"detail": "Invalid email or OTP"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -91,3 +93,28 @@ class DriveLoginView(generics.CreateAPIView):
             return Response({"message": "Successful hogya bhai"}, status=status.HTTP_200_OK)
         else:
             return Response({"detail": "Invalid email or OTP"}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserListView(generics.ListAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class DriverListView(generics.ListAPIView):
+    queryset = DriverUser.objects.all()
+    serializer_class = DriverUserSerializer
+
+class UserUpdateView(generics.UpdateAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserUpdateSerializer
+
+class DriverUpdateView(generics.UpdateAPIView):
+    queryset = DriverUser.objects.all()
+    serializer_class = DriverUserUpdateSerializer
+
+class UserDetailView(RetrieveAPIView):
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
