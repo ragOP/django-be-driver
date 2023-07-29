@@ -25,10 +25,10 @@ urlpatterns = [
     path('api/user/login/', UserLoginView.as_view(), name='user-login'),
     path('api/driver/create/', DriveCreateView.as_view(), name='driver-create'),
     path('api/driver/login/', DriveLoginView.as_view(), name='driver-login'),
-
-    # auth token done now otop etc left
+# s
+    # auth token done now otop etc lefts
     path('api/users/list', UserListView.as_view(), name='user-list'),
-    path('api/drivers/list', DriverListView.as_view(), name='driver-list'),
+    path('api/drivers/lists', DriverListView.as_view(), name='driver-list'),
     path('api/users/<int:pk>/', UserUpdateView.as_view(), name='user-update'),
     path('api/drivers/<int:pk>/', DriverUpdateView.as_view(), name='driver-update'),
     path('api/usersdetail/<int:pk>/', UserDetailView.as_view(), name='user-detail'),
